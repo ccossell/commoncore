@@ -1,59 +1,63 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_ptr.c                                     :+:      :+:    :+:   */
+/*   ft_print_unsigned.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ccossell <ccossell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/10 21:38:47 by marvin            #+#    #+#             */
-/*   Updated: 2023/05/11 17:20:44 by ccossell         ###   ########.fr       */
+/*   Created: 2023/05/11 11:41:40 by ccossell          #+#    #+#             */
+/*   Updated: 2023/05/11 17:14:25 by ccossell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "./libft/libft.h"
 
-int	ft_ptr_len(uintptr_t num)
+int	ft_num_len(unsigned int num)
 {
 	int	len;
 
 	len = 0;
-	while (num != 0)
+	while (num)
 	{
 		len++;
-		num = num / 16;
+		num /= 10;
 	}
 	return (len);
 }
 
-void	ft_put_ptr(uintptr_t num)
+char	*ft_uitoa(unsigned int n)
 {
-	if (num >= 16)
+	char	*num;
+	int		len;
+
+	len = ft_num_len(n);
+	num = (char *)malloc(len + 1);
+	if (!num)
+		return (0);
+	num[len] = '\0';
+	while (n != 0)
 	{
-		ft_put_ptr(num / 16);
-		ft_put_ptr(num % 16);
+		num[len - 1] = n % 10 + 48;
+		n = n / 10;
+		len--;
 	}
-	else
-	{
-		if (num <= 9)
-			ft_putchar_fd((num + '0'), 1);
-		else
-			ft_putchar_fd((num - 10 + 'a'), 1);
-	}
+	return (num);
 }
 
-int	ft_print_ptr(unsigned long long ptr)
+int	ft_print_unsigned(unsigned int n)
 {
-	int	print_len;
+	int		print_len;
+	char	*num;
 
 	print_len = 0;
-	print_len += write(1, "0x", 2);
-	if (ptr == 0)
+	if (n == 0)
 		print_len += write(1, "0", 1);
 	else
 	{
-		ft_put_ptr(ptr);
-		print_len += ft_ptr_len(ptr);
+		num = ft_uitoa(n);
+		print_len += ft_printstr(num);
+		free (num);
 	}
 	return (print_len);
 }
