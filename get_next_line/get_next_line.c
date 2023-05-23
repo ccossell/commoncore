@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
 char    *ft_read_to_str(int fd, char *str)
 {
     char    *buff;
