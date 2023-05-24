@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <unistd.h>
 
 char	*ft_read_to_str(int fd, char *str)
@@ -40,14 +40,14 @@ char	*ft_read_to_str(int fd, char *str)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*str;
+	static char	*str[4096];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	str = ft_read_to_str(fd, str);
-	if (!str)
+	str[fd] = ft_read_to_str(fd, str[fd]);
+	if (!str[fd])
 		return (NULL);
-	line = ft_get_line(str);
-	str = ft_new_str (str);
+	line = ft_get_line(str[fd]);
+	str[fd] = ft_new_str (str[fd]);
 	return (line);
 }
